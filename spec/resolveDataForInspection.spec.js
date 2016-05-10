@@ -24,7 +24,7 @@ describe("resolveDataForInspection", function() {
             });
         })();
         fakeFormData = new FormData();
-        fakeFormData.entries = jasmine.createSpy("entries").andReturn(fakeEntriesIterator());
+        fakeFormData.entries = jasmine.createSpy("entries").and.returnValue(fakeEntriesIterator());
 
         fakeData = {
             "foo": "bar",

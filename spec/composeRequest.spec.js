@@ -38,22 +38,22 @@ describe("composeRequest", function() {
 
         beforeEach(function() {
             var identityFunction = function(input) { return input; };
-            fakeBodyValidator = jasmine.createSpy("fakeBodyValidator").andReturn(true);
+            fakeBodyValidator = jasmine.createSpy("fakeBodyValidator").and.returnValue(true);
             fakeAjvInstance = jasmine.createSpyObj("fakeAjvInstance", [ "compile" ]);
-            fakeAjvInstance.compile.andReturn(fakeBodyValidator);
-            fakeAjv = jasmine.createSpy("fakeAjv").andReturn(fakeAjvInstance);
+            fakeAjvInstance.compile.and.returnValue(fakeBodyValidator);
+            fakeAjv = jasmine.createSpy("fakeAjv").and.returnValue(fakeAjvInstance);
             fakeEscapeUrl = jasmine.createSpy("fakeEscapeUrl")
-                .andCallFake(identityFunction);
+                .and.callFake(identityFunction);
             fakeResolveDataForInspection = jasmine.createSpy("fakeResolveDataForInspection")
-                .andCallFake(identityFunction);
+                .and.callFake(identityFunction);
             fakeResolveDataForTransmission = jasmine.createSpy("fakeResolveDataForTransmission")
-                .andCallFake(identityFunction);
+                .and.callFake(identityFunction);
             fakeResolveUrl = jasmine.createSpy("fakeResolveUrl")
-                .andCallFake(identityFunction);
+                .and.callFake(identityFunction);
             fakeUriTemplate = jasmine.createSpyObj("fakeUriTemplate", [ "fill" ]);
             fakeUriTemplate.varNames = [ "bar", "quux" ];
-            fakeUriTemplate.fill.andReturn("foo/BAR/baz/QUUX/corge");
-            fakeUriTemplates = jasmine.createSpy("fakeUriTemplates").andReturn(fakeUriTemplate);
+            fakeUriTemplate.fill.and.returnValue("foo/BAR/baz/QUUX/corge");
+            fakeUriTemplates = jasmine.createSpy("fakeUriTemplates").and.returnValue(fakeUriTemplate);
             fakeRequestDef = {
                 context: {
                     bar: "BAR",
@@ -107,12 +107,12 @@ describe("composeRequest", function() {
 
             expect(function() {
                 instance(fakeLink);
-            }).toThrow("Missing keys for request: " + fakeUriTemplate.varNames.join(", "));
+            }).toThrow(new Error("Missing keys for request: " + fakeUriTemplate.varNames.join(", ")));
         });
 
         describe("handling body schema", function() {
             it("should throw if a schema is provided, and doesn't match the body", function() {
-                fakeBodyValidator.andReturn(false);
+                fakeBodyValidator.and.returnValue(false);
                 fakeBodyValidator.errors = [
                     {
                         dataPath: "dataPath",
@@ -122,11 +122,11 @@ describe("composeRequest", function() {
 
                 expect(function() {
                     instance(fakeLink);
-                }).toThrow("dataPath message");
+                }).toThrow(new Error("dataPath message"));
             });
 
             it("should not throw if no schema is provided", function() {
-                fakeBodyValidator.andReturn(false);
+                fakeBodyValidator.and.returnValue(false);
                 fakeBodyValidator.errors = [
                     {
                         dataPath: "dataPath",

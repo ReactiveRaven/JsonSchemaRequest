@@ -12,10 +12,10 @@ describe("assertingResponseOK", function() {
     var fakeResponse;
     beforeEach(function() {
         container = new infusejs.Injector();
-        fakeBodyValidator = jasmine.createSpy("fakeBodyValidator").andReturn(true);
+        fakeBodyValidator = jasmine.createSpy("fakeBodyValidator").and.returnValue(true);
         fakeAjvInstance = jasmine.createSpyObj("fakeAjvInstance", [ "compile" ]);
-        fakeAjvInstance.compile.andReturn(fakeBodyValidator);
-        fakeAjv = jasmine.createSpy("fakeAjv").andReturn(fakeAjvInstance);
+        fakeAjvInstance.compile.and.returnValue(fakeBodyValidator);
+        fakeAjv = jasmine.createSpy("fakeAjv").and.returnValue(fakeAjvInstance);
         container.mapValue("ajv", fakeAjv);
         fakeTargetSchema = {};
         fakeLink = {
@@ -30,16 +30,16 @@ describe("assertingResponseOK", function() {
 
     it("should throw early if the link targetSchema is not valid", function() {
         var fakeError = new Error();
-        fakeAjvInstance.compile.andThrow(fakeError);
+        fakeAjvInstance.compile.and.throwError(fakeError);
 
         expect(function() { assertingResponseOK(fakeAjv)(fakeLink); }).toThrow();
     });
 
     it("should throw if the response is invalid", function() {
-        fakeBodyValidator.andReturn(false);
+        fakeBodyValidator.and.returnValue(false);
         fakeBodyValidator.errors = [{ dataPath: "path", message: "message" }];
 
-        expect(function() { assertingResponseOK(fakeAjv)(fakeLink)(fakeResponse); }).toThrow("path message");
+        expect(function() { assertingResponseOK(fakeAjv)(fakeLink)(fakeResponse); }).toThrow(new Error("path message"));
     });
 
     it("should pass through transparently if all is OK", function() {

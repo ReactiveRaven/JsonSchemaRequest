@@ -12,8 +12,8 @@ describe("schemaFetcher", function() {
         container = new infusejs.Injector();
         fetchConnection = jasmine.createSpyObj("fetchConnection", [ "json" ]);
         fetchPromise = jasmine.createSpyObj("fetchPromise", [ "then", "catch" ]);
-        fetchPromise.then.andCallFake(cb => { cb(fetchConnection); return fetchPromise; });
-        fetch = jasmine.createSpy("fetch").andReturn(fetchPromise);
+        fetchPromise.then.and.callFake(cb => { cb(fetchConnection); return fetchPromise; });
+        fetch = jasmine.createSpy("fetch").and.returnValue(fetchPromise);
 
         Promise = jasmine.createSpyObj("Promise", [ "resolve" ]);
 
@@ -48,11 +48,11 @@ describe("schemaFetcher", function() {
             instance("testurl");
 
             expect(fetch).toHaveBeenCalled();
-            expect(fetch.callCount).toBe(1);
+            expect(fetch.calls.count()).toBe(1);
 
             instance("testurl");
 
-            expect(fetch.callCount).toBe(1);
+            expect(fetch.calls.count()).toBe(1);
         });
 
         it("should convert to json", function() {

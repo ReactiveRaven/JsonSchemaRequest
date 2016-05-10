@@ -18,26 +18,26 @@ describe("jsonSchemaRequest", function() {
     beforeEach(function() {
         container = new infusejs.Injector();
         fakeAssertingInputOK = jasmine.createSpy("assertingInputOK")
-            .andReturn(PromiseSync.resolve(true));
+            .and.returnValue(PromiseSync.resolve(true));
         container.mapValue("assertingInputOK", fakeAssertingInputOK);
         deflatedSchema = { deflatedSchema: true };
-        fakeFetchSchema = jasmine.createSpy("fakeFetchSchema").andReturn(deflatedSchema);
+        fakeFetchSchema = jasmine.createSpy("fakeFetchSchema").and.returnValue(deflatedSchema);
         container.mapValue("fetchSchema", fakeFetchSchema);
         inflatedSchema = { inflatedSchema: true };
-        fakeExpandSchema = jasmine.createSpy("fakeExpandSchema").andReturn(inflatedSchema);
+        fakeExpandSchema = jasmine.createSpy("fakeExpandSchema").and.returnValue(inflatedSchema);
         container.mapValue("expandSchema", fakeExpandSchema);
         fakeLink = {};
-        fakeMatchLinkInstance = jasmine.createSpy("fakeMatchLinkInstance").andReturn(fakeLink);
-        fakeMatchLink = jasmine.createSpy("fakeMatchLink").andReturn(fakeMatchLinkInstance);
+        fakeMatchLinkInstance = jasmine.createSpy("fakeMatchLinkInstance").and.returnValue(fakeLink);
+        fakeMatchLink = jasmine.createSpy("fakeMatchLink").and.returnValue(fakeMatchLinkInstance);
         container.mapValue("matchLink", fakeMatchLink);
         flowInjection(container);
         fakeComposeRequestInstance = jasmine.createSpy("fakeComposeRequestInstance");
         fakeComposeRequest = jasmine.createSpy("fakeComposeRequest")
-            .andReturn(fakeComposeRequestInstance);
+            .and.returnValue(fakeComposeRequestInstance);
         container.mapValue("composeRequest", fakeComposeRequest);
         fakeResponse = { fakeResponse: true };
         fakeFiringRequest = jasmine.createSpy("fakeFiringRequest")
-            .andReturn(PromiseSync.resolve(fakeResponse));
+            .and.returnValue(PromiseSync.resolve(fakeResponse));
         container.mapValue("firingRequest", fakeFiringRequest);
         fakeAssertingResponseOK = jasmine.createSpy("fakeAssertingResponseOK");
         container.mapValue("assertingResponseOK", fakeAssertingResponseOK);

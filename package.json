@@ -3,8 +3,9 @@
   "description": "Make requests with json-hyper-schema references",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/jasmine-node spec",
-    "test-watch": "node_modules/.bin/jasmine-node spec --autotest --watch . --color",
+    "pretest": "npm run build",
+    "test": "node_modules/.bin/jasmine",
+    "test-watch": "node_modules/.bin/watch 'npm test' spec src schema --interval=0.5",
     "build": "node_modules/.bin/babel src/ --out-dir lib",
     "build-watch": "node_modules/.bin/babel --watch src/ --out-dir lib",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
@@ -40,7 +41,9 @@
     "babel-watch": "^2.0.2",
     "form-data": "^1.0.0-rc4",
     "infuse.js": "github:alliterativeanimals/infuse.js#master",
+    "jasmine": "^2.4.1",
     "jasmine-node": "^1.14.5",
-    "semantic-release": "^4.3.5"
+    "semantic-release": "^4.3.5",
+    "watch": "^0.18.0"
   }
 }

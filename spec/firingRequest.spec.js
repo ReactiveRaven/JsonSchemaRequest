@@ -19,9 +19,9 @@ describe("firingRequest", function() {
         };
         fakeResponse = {
             status: 200,
-            json: jasmine.createSpy("json").andReturn(PromiseSync.resolve(fakeBody)),
+            json: jasmine.createSpy("json").and.returnValue(PromiseSync.resolve(fakeBody)),
         };
-        fakeFetch = jasmine.createSpy("fetch").andReturn(PromiseSync.resolve(fakeResponse));
+        fakeFetch = jasmine.createSpy("fetch").and.returnValue(PromiseSync.resolve(fakeResponse));
         container.mapValue("fetch", fakeFetch);
     });
 
