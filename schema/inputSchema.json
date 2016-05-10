@@ -1,0 +1,24 @@
+{
+    "type": "object",
+    "properties": {
+        "schemaUrl": {
+            "type": "string",
+            "pattern": "^http"
+        },
+        "rel": {
+            "type": "string"
+        },
+        "context": {
+            "type": "object"
+        },
+        "data": {
+            "type": [ "object", "string" ]
+        },
+        "serverRoot": {
+            "type": "string",
+            "pattern": "^http"
+        }
+    },
+    "required": [ "schemaUrl", "rel" ],
+    "additionalProperties": false
+}
