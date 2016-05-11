@@ -6,7 +6,7 @@
     "pretest": "npm run build",
     "test": "node_modules/.bin/jasmine",
     "test-watch": "node_modules/.bin/watch 'npm test' spec src schema --interval=0.5",
-    "build": "node_modules/.bin/babel src/ --out-dir lib",
+    "build": "node_modules/.bin/babel index.es6 -o index.js && node_modules/.bin/babel src/ --out-dir lib",
     "build-watch": "node_modules/.bin/babel --watch src/ --out-dir lib",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
