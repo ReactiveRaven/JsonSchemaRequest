@@ -1,6 +1,6 @@
 # JsonSchemaRequest
 
-Allows making requests based on json hyper schema endpoints.
+Allows making requests based on json hyper schema endpoints. Currently a work in progress.
 
 **Installation:**
 
