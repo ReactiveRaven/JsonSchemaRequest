@@ -1,6 +1,6 @@
 const jsonSchemaRequest = (
     assertingInputOK,
-    fetchSchema,
+    schemaFetcher,
     expandSchema,
     matchLink,
     flow,
@@ -9,7 +9,7 @@ const jsonSchemaRequest = (
     assertingResponseOK
 ) => requestDef =>
     assertingInputOK(requestDef)
-        .then(() => fetchSchema(requestDef.schemaUrl))
+        .then(() => schemaFetcher(requestDef.schemaUrl))
         .then(expandSchema)
         .then(matchLink(requestDef))
         .then(link => {

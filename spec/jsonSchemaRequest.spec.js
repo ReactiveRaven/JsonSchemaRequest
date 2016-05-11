@@ -21,8 +21,8 @@ describe("jsonSchemaRequest", function() {
             .and.returnValue(PromiseSync.resolve(true));
         container.mapValue("assertingInputOK", fakeAssertingInputOK);
         deflatedSchema = { deflatedSchema: true };
-        fakeFetchSchema = jasmine.createSpy("fakeFetchSchema").and.returnValue(deflatedSchema);
-        container.mapValue("fetchSchema", fakeFetchSchema);
+        fakeSchemaFetcher = jasmine.createSpy("fakeSchemaFetcher").and.returnValue(deflatedSchema);
+        container.mapValue("schemaFetcher", fakeSchemaFetcher);
         inflatedSchema = { inflatedSchema: true };
         fakeExpandSchema = jasmine.createSpy("fakeExpandSchema").and.returnValue(inflatedSchema);
         container.mapValue("expandSchema", fakeExpandSchema);
@@ -85,11 +85,11 @@ describe("jsonSchemaRequest", function() {
         });
 
         it("should load the full schema with the given url", function() {
-            expect(fakeFetchSchema).not.toHaveBeenCalled();
+            expect(fakeSchemaFetcher).not.toHaveBeenCalled();
 
             instance(fakeRequestDef);
 
-            expect(fakeFetchSchema).toHaveBeenCalledWith(fakeRequestDef.schemaUrl);
+            expect(fakeSchemaFetcher).toHaveBeenCalledWith(fakeRequestDef.schemaUrl);
         });
 
         it("should inflate the schema with remote references", function() {

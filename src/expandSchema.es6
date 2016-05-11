@@ -1,4 +1,4 @@
-const expandSchema = (ajv, deref, fetchSchema, Promise, SCHEMA_PREFIX) => {
+const expandSchema = (ajv, deref, schemaFetcher, Promise, SCHEMA_PREFIX) => {
     const ajvRemoveAdditional = ajv({ removeAdditional: true });
 
     return schemaContent => new Promise((resolve, reject) => {
@@ -16,7 +16,7 @@ const expandSchema = (ajv, deref, fetchSchema, Promise, SCHEMA_PREFIX) => {
             Object.keys(validator.refs)
                 .map(key => key.split("#")[0])
                 .filter((key, index, array) => array.indexOf(key) === index)
-                .map(key => fetchSchema(key))
+                .map(key => schemaFetcher(key))
         ))
         .then(otherSchemas => deref(
             SCHEMA_PREFIX,

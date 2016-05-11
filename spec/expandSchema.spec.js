@@ -8,7 +8,7 @@ describe("expandSchema", function() {
     var fakeAjv;
     var fakeAjvInstance;
     var fakeDeref;
-    var fakeFetchSchema;
+    var fakeSchemaFetcher;
     var fakeValidator;
     var fakeRefs;
     var fakeDerefResult;
@@ -22,7 +22,7 @@ describe("expandSchema", function() {
         fakeAjvInstance.compileAsync.and.callFake(function(schmea, cb) { cb(undefined, fakeValidator); });
         fakeAjv = jasmine.createSpy("fakeAjv").and.returnValue(fakeAjvInstance);
         fakeDeref = jasmine.createSpy("fakeDeref").and.returnValue(fakeDerefResult);
-        fakeFetchSchema = jasmine.createSpy("fakeFetchSchema").and.returnValue(utils.PromiseSync.resolve(fakeChildSchema));
+        fakeSchemaFetcher = jasmine.createSpy("fakeSchemaFetcher").and.returnValue(utils.PromiseSync.resolve(fakeChildSchema));
         FAKE_SCHEMA_PREFIX = "FAKE_SCHEMA_PREFIX";
         container = new infusejs.Injector();
         fakeValidator = jasmine.createSpy("fakeValidator");
@@ -30,7 +30,7 @@ describe("expandSchema", function() {
         fakeValidator.refs = fakeRefs;
         container.mapValue("ajv", fakeAjv);
         container.mapValue("deref", fakeDeref);
-        container.mapValue("fetchSchema", fakeFetchSchema);
+        container.mapValue("schemaFetcher", fakeSchemaFetcher);
         container.mapValue("Promise", utils.PromiseSync);
         container.mapValue("SCHEMA_PREFIX", FAKE_SCHEMA_PREFIX);
     });
@@ -62,9 +62,9 @@ describe("expandSchema", function() {
         var exampleSchema = {};
         fakeRefs.fake_ref = {};
         injection(container);
-        expect(fakeFetchSchema).not.toHaveBeenCalled();
+        expect(fakeSchemaFetcher).not.toHaveBeenCalled();
         container.getValue("expandSchema")(exampleSchema);
-        expect(fakeFetchSchema).toHaveBeenCalledWith("fake_ref");
+        expect(fakeSchemaFetcher).toHaveBeenCalledWith("fake_ref");
     });
 
     it("should pass those other loaded schemas to deref to build the final schema", function() {
