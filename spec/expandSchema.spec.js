@@ -32,7 +32,6 @@ describe("expandSchema", function() {
         container.mapValue("deref", fakeDeref);
         container.mapValue("schemaFetcher", fakeSchemaFetcher);
         container.mapValue("Promise", utils.PromiseSync);
-        container.mapValue("SCHEMA_PREFIX", FAKE_SCHEMA_PREFIX);
     });
 
     it("should be a function", function() {
@@ -54,7 +53,7 @@ describe("expandSchema", function() {
         var exampleSchema = {};
         injection(container);
         expect(fakeAjvInstance.compileAsync).not.toHaveBeenCalled();
-        container.getValue("expandSchema")(exampleSchema);
+        container.getValue("expandSchema")(FAKE_SCHEMA_PREFIX)(exampleSchema);
         expect(fakeAjvInstance.compileAsync).toHaveBeenCalledWith(exampleSchema, jasmine.any(Function));
     });
 
@@ -63,7 +62,7 @@ describe("expandSchema", function() {
         fakeRefs.fake_ref = {};
         injection(container);
         expect(fakeSchemaFetcher).not.toHaveBeenCalled();
-        container.getValue("expandSchema")(exampleSchema);
+        container.getValue("expandSchema")(FAKE_SCHEMA_PREFIX)(exampleSchema);
         expect(fakeSchemaFetcher).toHaveBeenCalledWith("fake_ref");
     });
 
@@ -72,7 +71,7 @@ describe("expandSchema", function() {
         fakeRefs.fake_ref = {};
         injection(container);
         expect(fakeDeref).not.toHaveBeenCalled();
-        expect(container.getValue("expandSchema")(exampleSchema)._then).toBe(fakeDerefResult);
+        expect(container.getValue("expandSchema")(FAKE_SCHEMA_PREFIX)(exampleSchema)._then).toBe(fakeDerefResult);
         expect(fakeDeref).toHaveBeenCalled();
         expect(fakeDeref.calls.argsFor(0)[0]).toBe(FAKE_SCHEMA_PREFIX);
         expect(fakeDeref.calls.argsFor(0)[1]).toBe(exampleSchema);

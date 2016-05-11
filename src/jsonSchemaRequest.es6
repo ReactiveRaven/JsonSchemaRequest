@@ -10,7 +10,7 @@ const jsonSchemaRequest = (
 ) => requestDef =>
     assertingInputOK(requestDef)
         .then(() => schemaFetcher(requestDef.schemaUrl))
-        .then(expandSchema)
+        .then(expandSchema(requestDef.schemaPrefix))
         .then(matchLink(requestDef))
         .then(link => {
             const composedRequest = composeRequest(requestDef)(link);

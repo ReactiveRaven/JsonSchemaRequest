@@ -4,6 +4,8 @@ import fetch from "isomorphic-fetch";
 import { Promise } from "es6-promise";
 import uriTemplates from "uri-templates";
 import { Injector } from "infuse.js";
+import FormData from "form-data";
+import from from "array.from";
 const container = new Injector();
 
 // add external modules to DI container
@@ -14,6 +16,8 @@ const container = new Injector();
     ajv,
     deref,
     fetch,
+    FormData,
+    from,
     Promise,
     uriTemplates
 });

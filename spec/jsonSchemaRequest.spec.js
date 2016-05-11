@@ -15,6 +15,8 @@ describe("jsonSchemaRequest", function() {
     var fakeComposeRequestInstance;
     var fakeComposeRequest;
     var fakeResponse;
+    var fakeExpandSchemaInstance;
+    var fakeExpandSchema;
     beforeEach(function() {
         container = new infusejs.Injector();
         fakeAssertingInputOK = jasmine.createSpy("assertingInputOK")
@@ -24,7 +26,8 @@ describe("jsonSchemaRequest", function() {
         fakeSchemaFetcher = jasmine.createSpy("fakeSchemaFetcher").and.returnValue(deflatedSchema);
         container.mapValue("schemaFetcher", fakeSchemaFetcher);
         inflatedSchema = { inflatedSchema: true };
-        fakeExpandSchema = jasmine.createSpy("fakeExpandSchema").and.returnValue(inflatedSchema);
+        fakeExpandSchemaInstance = jasmine.createSpy("fakeExpandSchemaInstance").and.returnValue(inflatedSchema);
+        fakeExpandSchema = jasmine.createSpy("fakeExpandSchema").and.returnValue(fakeExpandSchemaInstance);
         container.mapValue("expandSchema", fakeExpandSchema);
         fakeLink = {};
         fakeMatchLinkInstance = jasmine.createSpy("fakeMatchLinkInstance").and.returnValue(fakeLink);
@@ -93,11 +96,11 @@ describe("jsonSchemaRequest", function() {
         });
 
         it("should inflate the schema with remote references", function() {
-            expect(fakeExpandSchema).not.toHaveBeenCalled();
+            expect(fakeExpandSchemaInstance).not.toHaveBeenCalled();
 
             instance(fakeRequestDef);
 
-            expect(fakeExpandSchema).toHaveBeenCalledWith(deflatedSchema);
+            expect(fakeExpandSchemaInstance).toHaveBeenCalledWith(deflatedSchema);
         });
 
         it("should find the link type given", function() {

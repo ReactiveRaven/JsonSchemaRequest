@@ -3,20 +3,29 @@
     "properties": {
         "schemaUrl": {
             "type": "string",
-            "pattern": "^http"
+            "pattern": "^http",
+            "description": "url to load the schema from"
         },
         "rel": {
-            "type": "string"
+            "type": "string",
+            "description": "relationship of link to the context object"
         },
         "context": {
-            "type": "object"
+            "type": "object",
+            "description": "object to request against, if any"
         },
         "data": {
-            "type": [ "object", "string" ]
+            "type": [ "object", "string" ],
+            "description": "to be sent to the server in the request"
         },
         "serverRoot": {
             "type": "string",
-            "pattern": "^http"
+            "pattern": "^http",
+            "description": "Used to resolve relative link hrefs"
+        },
+        "schemaPrefix": {
+            "type": "string",
+            "description": "Used to resolve relative schema IDs"
         }
     },
     "required": [ "schemaUrl", "rel" ],
