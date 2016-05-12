@@ -20,7 +20,11 @@ const composeRequest = (
         }
 
         const request = {
-            method: link.method || "GET"
+            method: link.method || "GET",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
         };
 
         if (link.schema) {

@@ -95,6 +95,15 @@ describe("composeRequest", function() {
             expect(result.request).toBeDefined();
         });
 
+        it("should set the content-type headers to json", function() {
+            var result = instance(fakeLink);
+            expect(typeof result.request).toBe("object");
+            var request = result.request;
+            expect(typeof request.headers).toBe("object");
+            var headers = request.headers;
+            expect(headers["Accept"]).toBe("application/json");
+            expect(headers["Content-Type"]).toBe("application/json");
+        });
 
         it("should return the link as well", function() {
             var result = instance(fakeLink);
