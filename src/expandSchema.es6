@@ -1,5 +1,7 @@
 const expandSchema = (ajv, deref, schemaFetcher, Promise) => {
-    const ajvRemoveAdditional = ajv({ removeAdditional: true });
+    const loadSchema = (uri, callback) => schemaFetcher(uri)
+        .then(data => callback(null, data), err => callback(err));
+    const ajvRemoveAdditional = ajv({ removeAdditional: true, loadSchema: loadSchema });
 
     return schemaPrefix => schemaContent =>
         new Promise((resolve, reject) => {
@@ -19,7 +21,7 @@ const expandSchema = (ajv, deref, schemaFetcher, Promise) => {
                     .filter((key, index, array) => array.indexOf(key) === index)
                     .map(key => schemaFetcher(key))
             ))
-            .then(otherSchemas => deref(
+            .then(otherSchemas => deref()(
                 schemaPrefix,
                 schemaContent,
                 otherSchemas,
