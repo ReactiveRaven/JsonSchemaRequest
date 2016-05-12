@@ -10,7 +10,38 @@ const matchLink = requestDef => schema => { // will need access to requestDef
     } else if (matchingLinks.length > 1) {
         throw new Error("Found multiple links with the same rel!");
     } else {
-        return matchingLinks[0];
+
+        const alreadySeeked = [];
+
+        const seekRefs = (obj) => {
+            if (alreadySeeked.indexOf(obj) > -1) {
+                return obj;
+            }
+            if (typeof obj !== "object") return obj;
+            if (Array.isArray(obj)) return obj.map(seekRefs);
+
+            Object.keys(obj)
+                .forEach(key => obj[key] = seekRefs(obj[key]));
+
+            if (obj["$ref"] === schema.id + "#") {
+                delete obj["$ref"];
+                const schemaClone = {
+                    ...schema
+                };
+                delete schemaClone.links;
+                const newObj = {
+                    ...obj,
+                    ...schemaClone
+                };
+                obj = newObj;
+            }
+
+            alreadySeeked.push(obj);
+
+            return obj;
+        }
+
+        return seekRefs(matchingLinks[0]);
     }
 }
 
