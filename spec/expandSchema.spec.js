@@ -2,36 +2,61 @@ var expandSchema = require("../lib/expandSchema").default;
 var injection = require("../lib/expandSchema").injection;
 var infusejs = require("infuse.js");
 var utils = require("./_utils");
+var deref = require("deref");
 
 describe("expandSchema", function() {
     var container;
-    var fakeAjv;
-    var fakeAjvInstance;
-    var fakeDerefInstance;
-    var fakeDeref;
     var fakeSchemaFetcher;
-    var fakeValidator;
-    var fakeRefs;
-    var fakeDerefResult;
-    var fakeChildSchema;
-    var FAKE_SCHEMA_PREFIX;
+
+    var exampleSchema;
+    var metadataSchema;
+    var expectedSchema;
+
+    var knownUrls;
 
     beforeEach(function() {
-        fakeChildSchema = {};
-        fakeDerefResult = {};
-        fakeAjvInstance = jasmine.createSpyObj("fakeAjvInstance", [ "compileAsync" ]);
-        fakeAjvInstance.compileAsync.and.callFake(function(schmea, cb) { cb(undefined, fakeValidator); });
-        fakeAjv = jasmine.createSpy("fakeAjv").and.returnValue(fakeAjvInstance);
-        fakeDerefInstance = jasmine.createSpy("fakeDerefInstance").and.returnValue(fakeDerefResult);
-        fakeDeref = jasmine.createSpy("fakeDeref").and.returnValue(fakeDerefInstance);
-        fakeSchemaFetcher = jasmine.createSpy("fakeSchemaFetcher").and.returnValue(utils.PromiseSync.resolve(fakeChildSchema));
-        FAKE_SCHEMA_PREFIX = "FAKE_SCHEMA_PREFIX";
+        exampleSchema = {
+            "id": "http://www.example.com/blog-post",
+            "type": "object",
+            "properties": {
+                "id": { "type": "number" },
+                "author": { "type": "string" },
+                "title": { "type": "string" },
+                "body": { "type": "string" },
+                "metadata": { "$ref": "http://www.example.com/meta-data" }
+            },
+            "required": [ "title", "author", "id" ]
+        };
+
+        metadataSchema = {
+            "id": "http://www.example.com/meta-data",
+            "properties": {
+                "created": {
+                    "type": "number",
+                    "description": "UTC unix timestamp"
+                }
+            }
+        };
+
+        expectedSchema = JSON.parse(JSON.stringify(exampleSchema));
+        expectedSchema.properties.metadata = JSON.parse(JSON.stringify(metadataSchema));
+        delete expectedSchema.properties.metadata.id;
+
+        knownUrls = {};
+        knownUrls[exampleSchema.id] = exampleSchema;
+        knownUrls[metadataSchema.id] = metadataSchema;
+
+        fakeSchemaFetcher = jasmine.createSpy("fakeSchemaFetcher")
+            .and.callFake(url => {
+                var found = knownUrls[url];
+                if (found) {
+                    return utils.PromiseSync.resolve(found);
+                } else {
+                    return utils.PromiseSync.reject("TEST: URL NOT FOUND");
+                }
+            });
         container = new infusejs.Injector();
-        fakeValidator = jasmine.createSpy("fakeValidator");
-        fakeRefs = {};
-        fakeValidator.refs = fakeRefs;
-        container.mapValue("ajv", fakeAjv);
-        container.mapValue("deref", fakeDeref);
+        container.mapValue("deref", deref);
         container.mapValue("schemaFetcher", fakeSchemaFetcher);
         container.mapValue("Promise", utils.PromiseSync);
     });
@@ -51,33 +76,11 @@ describe("expandSchema", function() {
         expect(container.getValue(mapName)).toEqual(jasmine.any(Function));
     });
 
-    it("should compile the schema async, loading missing schemas", function() {
-        var exampleSchema = {};
+    it("should load refs and inline them", function() {
         injection(container);
-        expect(fakeAjvInstance.compileAsync).not.toHaveBeenCalled();
-        container.getValue("expandSchema")(FAKE_SCHEMA_PREFIX)(exampleSchema);
-        expect(fakeAjvInstance.compileAsync).toHaveBeenCalledWith(exampleSchema, jasmine.any(Function));
-    });
+        var expandSchema = container.getValue("expandSchema");
 
-    it("should use the refs in the resultant validator and load them", function() {
-        var exampleSchema = {};
-        fakeRefs.fake_ref = {};
-        injection(container);
-        expect(fakeSchemaFetcher).not.toHaveBeenCalled();
-        container.getValue("expandSchema")(FAKE_SCHEMA_PREFIX)(exampleSchema);
-        expect(fakeSchemaFetcher).toHaveBeenCalledWith("fake_ref");
-    });
-
-    it("should pass those other loaded schemas to deref to build the final schema", function() {
-        var exampleSchema = {};
-        fakeRefs.fake_ref = {};
-        injection(container);
-        expect(fakeDeref).not.toHaveBeenCalled();
-        expect(container.getValue("expandSchema")(FAKE_SCHEMA_PREFIX)(exampleSchema)._then).toBe(fakeDerefResult);
-        expect(fakeDeref).toHaveBeenCalled();
-        expect(fakeDerefInstance.calls.argsFor(0)[0]).toBe(FAKE_SCHEMA_PREFIX);
-        expect(fakeDerefInstance.calls.argsFor(0)[1]).toBe(exampleSchema);
-        expect(fakeDerefInstance.calls.argsFor(0)[2]).toEqual([ fakeChildSchema ]);
-        expect(fakeDerefInstance.calls.argsFor(0)[3]).toBe(true);
+        expect(JSON.stringify(expandSchema("prefix")(exampleSchema)._then))
+            .toBe(JSON.stringify(expectedSchema));
     });
 });
