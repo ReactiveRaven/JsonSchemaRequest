@@ -5,13 +5,13 @@ Allows making requests based on json hyper schema endpoints. Currently a work in
 [![Stability:Experimental](https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square&maxAge=2592000)](https://nodejs.org/api/documentation.html#documentation_stability_index)
 [![NPM Version](https://img.shields.io/npm/v/json-schema-request.svg?style=flat-square&maxAge=3600)](https://www.npmjs.com/package/json-schema-request)
 [![Travis](https://img.shields.io/travis/ReactiveRaven/JsonSchemaRequest.svg?style=flat-square&maxAge=3600)](https://travis-ci.org/ReactiveRaven/JsonSchemaRequest)
-[![Downloads](https://img.shields.io/npm/dm/json-schema-request.svg?style=flat-square&maxAge=25200)](https://www.npmjs.com/package/json-schema-request)
 [![Issues](https://img.shields.io/github/issues/reactiveraven/jsonschemarequest.svg?style=flat-square&maxAge=3600)](https://github.com/reactiveraven/JsonSchemaRequest/issues)
 
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square&maxAge=2592000)](http://commitizen.github.io/cz-cli/)
 [![Semantic Release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square&maxAge=2592000)](https://github.com/semantic-release/semantic-release)
 [![License](https://img.shields.io/npm/l/json-schema-request.svg?style=flat-square&maxAge=2592000)](http://spdx.org/licenses/MIT)
 [![Maintenance](https://img.shields.io/maintenance/yes/2016.svg?maxAge=2592000&style=flat-square&maxAge=2592000)](https://github.com/reactiveraven/JsonSchemaRequest/issues)
+[![Downloads](https://img.shields.io/npm/dm/json-schema-request.svg?style=flat-square&maxAge=25200)](https://www.npmjs.com/package/json-schema-request)
 
 **Installation:**
 
