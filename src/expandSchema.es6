@@ -21,9 +21,6 @@ const normaliseRefs = refs => refs.filter(ref => ref !== "#")
     .filter((ref, idx, arr) => arr.indexOf(ref) === idx);
 
 const expandSchema = (deref, schemaFetcher, Promise) => {
-    const loadSchema = (uri, callback) => schemaFetcher(uri)
-        .then(data => callback(null, data), err => callback(err));
-
     return schemaPrefix => schemaContent =>
         Promise.all(
             normaliseRefs(refFinder(schemaContent))
