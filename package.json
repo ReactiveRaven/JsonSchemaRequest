@@ -53,5 +53,9 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "jshintConfig": {
+    "esversion": 6,
+    "unused": true
   }
 }
