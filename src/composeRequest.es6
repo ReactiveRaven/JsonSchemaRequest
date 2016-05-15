@@ -55,7 +55,7 @@ const composeRequest = (
             link
         };
     };
-}
+};
 
 export const injection = container => container.mapClass("composeRequest", composeRequest, true);
 

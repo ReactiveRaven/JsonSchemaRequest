@@ -7,6 +7,7 @@ import uriTemplates from "uri-templates";
 import { Injector } from "infuse.js";
 import FormData from "form-data";
 import from from "array.from";
+import jsonSchemaLoadTree from "json-schema-load-tree";
 const container = new Injector();
 
 // add external modules to DI container
@@ -20,6 +21,7 @@ const container = new Injector();
     fetch,
     FormData,
     from,
+    jsonSchemaLoadTree,
     Promise,
     uriTemplates
 });

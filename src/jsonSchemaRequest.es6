@@ -1,22 +1,26 @@
 const jsonSchemaRequest = (
     assertingInputOK,
-    schemaFetcher,
-    expandSchema,
-    matchLink,
-    flow,
+    assertingResponseOK,
     composeRequest,
+    deref,
     firingRequest,
-    assertingResponseOK
+    flow,
+    jsonSchemaLoadTree,
+    matchLink
 ) => requestDef =>
     assertingInputOK(requestDef)
-        .then(() => schemaFetcher(requestDef.schemaUrl))
-        .then(expandSchema(requestDef.schemaPrefix))
+        .then(() => jsonSchemaLoadTree(requestDef.schemaUrl))
+        .then(tree => deref()(
+            requestDef.schemaPrefix,
+            tree[requestDef.schemaUrl],
+            Object.keys(tree).map(key => tree[key]),
+            true
+        ))
         .then(matchLink(requestDef))
-        .then(link => {
-            const composedRequest = composeRequest(requestDef)(link);
-            return firingRequest(composedRequest)
+        .then(link =>
+            firingRequest(composeRequest(requestDef)(link))
                 .then(assertingResponseOK(link))
-        });
+        );
 
 export const injection = container => container.mapClass("jsonSchemaRequest", jsonSchemaRequest, true);
 

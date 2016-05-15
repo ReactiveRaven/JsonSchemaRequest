@@ -34,6 +34,7 @@
     "deref": "^0.6.4",
     "es6-promise": "^3.1.2",
     "isomorphic-fetch": "^2.2.1",
+    "json-schema-load-tree": "^0.1.1",
     "uri-templates": "^0.1.9"
   },
   "devDependencies": {

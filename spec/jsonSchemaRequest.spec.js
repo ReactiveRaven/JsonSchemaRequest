@@ -2,6 +2,7 @@ var jsonSchemaRequest = require("../lib/jsonSchemaRequest").default;
 var injection = require("../lib/jsonSchemaRequest").injection;
 var flowInjection = require("../lib/flow").injection;
 var infusejs = require("infuse.js");
+var deref = require("deref");
 var utils = require("./_utils");
 var PromiseSync = utils.PromiseSync;
 
@@ -10,25 +11,17 @@ describe("jsonSchemaRequest", function() {
     var fakeAssertingInputOK;
     var fakeLink;
     var fakeMatchLinkInstance;
-    var deflatedSchema;
-    var inflatedSchema;
     var fakeComposeRequestInstance;
     var fakeComposeRequest;
     var fakeResponse;
-    var fakeExpandSchemaInstance;
-    var fakeExpandSchema;
+    var fakeSchemaUrl;
+    var fakeJsonTree;
+    var fakeJsonSchemaLoadTree;
     beforeEach(function() {
         container = new infusejs.Injector();
         fakeAssertingInputOK = jasmine.createSpy("assertingInputOK")
             .and.returnValue(PromiseSync.resolve(true));
         container.mapValue("assertingInputOK", fakeAssertingInputOK);
-        deflatedSchema = { deflatedSchema: true };
-        fakeSchemaFetcher = jasmine.createSpy("fakeSchemaFetcher").and.returnValue(deflatedSchema);
-        container.mapValue("schemaFetcher", fakeSchemaFetcher);
-        inflatedSchema = { inflatedSchema: true };
-        fakeExpandSchemaInstance = jasmine.createSpy("fakeExpandSchemaInstance").and.returnValue(inflatedSchema);
-        fakeExpandSchema = jasmine.createSpy("fakeExpandSchema").and.returnValue(fakeExpandSchemaInstance);
-        container.mapValue("expandSchema", fakeExpandSchema);
         fakeLink = {};
         fakeMatchLinkInstance = jasmine.createSpy("fakeMatchLinkInstance").and.returnValue(fakeLink);
         fakeMatchLink = jasmine.createSpy("fakeMatchLink").and.returnValue(fakeMatchLinkInstance);
@@ -44,6 +37,43 @@ describe("jsonSchemaRequest", function() {
         container.mapValue("firingRequest", fakeFiringRequest);
         fakeAssertingResponseOK = jasmine.createSpy("fakeAssertingResponseOK");
         container.mapValue("assertingResponseOK", fakeAssertingResponseOK);
+
+        fakeSchemaUrl = "http://www.example.com/blog-post.json";
+
+        fakeJsonTree = {
+            "http://www.example.com/blog-post.json": {
+                "id": "http://www.example.com/blog-post.json",
+                "type": "object",
+                "properties": {
+                    "id": { "type": "number" },
+                    "author": { "type": "string" },
+                    "title": { "type": "string" },
+                    "body": { "type": "string" },
+                    "metadata": { "$ref": "http://www.example.com/metadata.json" }
+                },
+                "required": [ "title", "author", "id" ]
+            },
+            "http://www.example.com/metadata.json": {
+                "id": "http://www.example.com/metadata.json",
+                "type": "object",
+                "properties": {
+                    "created": { "$ref": "types.json#/definitions/timestamp" }
+                }
+            },
+            "http://www.example.com/types.json": {
+                "id": "http://www.example.com/types.json",
+                "definitions": {
+                    "timestamp": {
+                        "type": "number",
+                        "description": "UTC Unix timestamp"
+                    }
+                }
+            }
+        };
+        fakeJsonSchemaLoadTree = jasmine.createSpy("fakeJsonSchemaLoadTree").and.returnValue(fakeJsonTree);
+        container.mapValue("jsonSchemaLoadTree", fakeJsonSchemaLoadTree);
+
+        container.mapValue("deref", deref);
     });
 
     it("should be a function", function() {
@@ -71,13 +101,14 @@ describe("jsonSchemaRequest", function() {
             instance = container.getValue("jsonSchemaRequest");
 
             fakeRequestDef = {
-                schemaUrl: "Schema Url"
+                schemaUrl: fakeSchemaUrl
             };
-        })
+        });
 
         it("should return a promise", function() {
             expect(instance(fakeRequestDef)).toEqual(jasmine.any(PromiseSync));
         });
+
 
         it("should validate the input", function() {
             expect(fakeAssertingInputOK).not.toHaveBeenCalled();
@@ -88,19 +119,11 @@ describe("jsonSchemaRequest", function() {
         });
 
         it("should load the full schema with the given url", function() {
-            expect(fakeSchemaFetcher).not.toHaveBeenCalled();
+            expect(fakeJsonSchemaLoadTree).not.toHaveBeenCalled();
 
             instance(fakeRequestDef);
 
-            expect(fakeSchemaFetcher).toHaveBeenCalledWith(fakeRequestDef.schemaUrl);
-        });
-
-        it("should inflate the schema with remote references", function() {
-            expect(fakeExpandSchemaInstance).not.toHaveBeenCalled();
-
-            instance(fakeRequestDef);
-
-            expect(fakeExpandSchemaInstance).toHaveBeenCalledWith(deflatedSchema);
+            expect(fakeJsonSchemaLoadTree).toHaveBeenCalledWith(fakeRequestDef.schemaUrl);
         });
 
         it("should find the link type given", function() {
@@ -110,7 +133,7 @@ describe("jsonSchemaRequest", function() {
             instance(fakeRequestDef);
 
             expect(fakeMatchLink).toHaveBeenCalledWith(fakeRequestDef);
-            expect(fakeMatchLinkInstance).toHaveBeenCalledWith(inflatedSchema);
+            expect(fakeMatchLinkInstance).toHaveBeenCalled();
         });
 
         it("should make the request", function() {
@@ -132,5 +155,5 @@ describe("jsonSchemaRequest", function() {
 
             expect(fakeAssertingResponseOK).toHaveBeenCalled();
         });
-    })
+    });
 });
