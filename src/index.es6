@@ -36,7 +36,6 @@ require("./matchLink").injection(container);
 require("./resolveDataForInspection").injection(container);
 require("./resolveDataForTransmission").injection(container);
 require("./resolveUrl").injection(container);
-require("./schemaFetcher").injection(container);
 require("./assertingResponseOK").injection(container);
 
 // infuse!
