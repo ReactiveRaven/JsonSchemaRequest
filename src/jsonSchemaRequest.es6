@@ -4,7 +4,6 @@ const jsonSchemaRequest = (
     composeRequest,
     deref,
     firingRequest,
-    flow,
     jsonSchemaLoadTree,
     matchLink
 ) => requestDef =>

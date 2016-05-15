@@ -1,6 +1,5 @@
 var jsonSchemaRequest = require("../lib/jsonSchemaRequest").default;
 var injection = require("../lib/jsonSchemaRequest").injection;
-var flowInjection = require("../lib/flow").injection;
 var infusejs = require("infuse.js");
 var deref = require("deref");
 var utils = require("./_utils");
@@ -26,7 +25,6 @@ describe("jsonSchemaRequest", function() {
         fakeMatchLinkInstance = jasmine.createSpy("fakeMatchLinkInstance").and.returnValue(fakeLink);
         fakeMatchLink = jasmine.createSpy("fakeMatchLink").and.returnValue(fakeMatchLinkInstance);
         container.mapValue("matchLink", fakeMatchLink);
-        flowInjection(container);
         fakeComposeRequestInstance = jasmine.createSpy("fakeComposeRequestInstance");
         fakeComposeRequest = jasmine.createSpy("fakeComposeRequest")
             .and.returnValue(fakeComposeRequestInstance);
