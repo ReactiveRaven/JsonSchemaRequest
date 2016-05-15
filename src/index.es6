@@ -1,4 +1,5 @@
 import ajv from "ajv";
+import deepPluck from "deep-pluck";
 import deref from "deref";
 import fetch from "isomorphic-fetch";
 import { Promise } from "es6-promise";
@@ -14,6 +15,7 @@ const container = new Injector();
         .forEach(key => container.mapValue(key, items[key]))
 )({
     ajv,
+    deepPluck,
     deref,
     fetch,
     FormData,

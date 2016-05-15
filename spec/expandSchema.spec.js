@@ -3,6 +3,7 @@ var injection = require("../lib/expandSchema").injection;
 var infusejs = require("infuse.js");
 var utils = require("./_utils");
 var deref = require("deref");
+var deepPluck = require("deep-pluck");
 
 describe("expandSchema", function() {
     var container;
@@ -15,19 +16,6 @@ describe("expandSchema", function() {
     var knownUrls;
 
     beforeEach(function() {
-        exampleSchema = {
-            "id": "http://www.example.com/blog-post",
-            "type": "object",
-            "properties": {
-                "id": { "type": "number" },
-                "author": { "type": "string" },
-                "title": { "type": "string" },
-                "body": { "type": "string" },
-                "metadata": { "$ref": "http://www.example.com/meta-data" }
-            },
-            "required": [ "title", "author", "id" ]
-        };
-
         metadataSchema = {
             "id": "http://www.example.com/meta-data",
             "properties": {
@@ -36,6 +24,19 @@ describe("expandSchema", function() {
                     "description": "UTC unix timestamp"
                 }
             }
+        };
+
+        exampleSchema = {
+            "id": "http://www.example.com/blog-post",
+            "type": "object",
+            "properties": {
+                "id": { "type": "number" },
+                "author": { "type": "string" },
+                "title": { "type": "string" },
+                "body": { "type": "string" },
+                "metadata": { "$ref": metadataSchema.id }
+            },
+            "required": [ "title", "author", "id" ]
         };
 
         expectedSchema = JSON.parse(JSON.stringify(exampleSchema));
@@ -56,9 +57,10 @@ describe("expandSchema", function() {
                 }
             });
         container = new infusejs.Injector();
+        container.mapValue("deepPluck", deepPluck);
         container.mapValue("deref", deref);
-        container.mapValue("schemaFetcher", fakeSchemaFetcher);
         container.mapValue("Promise", utils.PromiseSync);
+        container.mapValue("schemaFetcher", fakeSchemaFetcher);
     });
 
     it("should be a function", function() {

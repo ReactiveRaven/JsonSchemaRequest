@@ -1,29 +1,16 @@
-const refFinder = obj => {
-    if (Array.isArray(obj)) {
-        return obj.map(item => refFinder(item))
-            .reduce((acc, val) => acc.concat(val), []);
-    }
-    if (typeof obj !== "object") {
-        return [];
-    }
-    var refs = [];
-    if (obj.$ref) {
-        refs.push(obj.$ref);
-    }
-    refs = Object.keys(obj)
-        .map(key => refFinder(obj[key]))
-        .reduce((acc, val) => acc.concat(val), refs);
-    return refs;
-};
+const normaliseRefs = refs =>
+    refs
+        // ignore self-references
+        .filter(ref => ref !== "#")
+        // ignore drilldowns, only interested in files to load
+        .map(ref => ref.split("#")[0])
+        // remove duplicates
+        .filter((ref, idx, arr) => arr.indexOf(ref) === idx);
 
-const normaliseRefs = refs => refs.filter(ref => ref !== "#")
-    .map(ref => ref.split("#")[0])
-    .filter((ref, idx, arr) => arr.indexOf(ref) === idx);
-
-const expandSchema = (deref, schemaFetcher, Promise) => {
-    return schemaPrefix => schemaContent =>
+const expandSchema = (deref, schemaFetcher, Promise, deepPluck) =>
+    schemaPrefix => schemaContent =>
         Promise.all(
-            normaliseRefs(refFinder(schemaContent))
+            normaliseRefs(deepPluck(schemaContent, "$ref"))
                 .map(key => schemaFetcher(key))
         )
             .then(otherSchemas => deref()(
@@ -32,7 +19,6 @@ const expandSchema = (deref, schemaFetcher, Promise) => {
                 otherSchemas,
                 true
             ));
-};
 
 export const injection = container => container.mapClass("expandSchema", expandSchema, true);
 
