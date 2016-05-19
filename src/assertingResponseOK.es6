@@ -9,7 +9,6 @@ const assertingResponseOK = ajv => {
         );
 
         return data => {
-            // @TODONE:0 fix builtRequest.link dependency. link returned by matchLink should be passed to both composeRequest and fireRequest
             if (!responseOk(data)) {
                 throw new Error(
                     responseOk.errors
@@ -19,7 +18,7 @@ const assertingResponseOK = ajv => {
             }
 
             return data;
-        }
+        };
     };
 };
 

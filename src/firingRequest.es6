@@ -9,7 +9,7 @@ const firingRequest = fetch =>  builtRequest => fetch(builtRequest.url, builtReq
         }
     })
     .then(response => response.json())
-    .then(parsed => parsed.data);
+    .then(parsed => parsed);
 
 export const injection = container => container.mapClass("firingRequest", firingRequest, true);
 
