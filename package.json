@@ -3,7 +3,7 @@
   "description": "Make requests with json-hyper-schema references",
   "main": "index.js",
   "scripts": {
-    "pretest": "npm run build",
+    "pretest": "npm run  build",
     "test": "node_modules/.bin/jasmine",
     "test-watch": "node_modules/.bin/watch 'npm test' spec src schema --interval=0.5",
     "prebuild": "rm -rf lib",
