@@ -1,5 +1,6 @@
 var assertingInputOK = require("../lib/assertingInputOK").default;
 var injection = require("../lib/assertingInputOK").injection;
+var jsonValidationError = require("../lib/jsonValidationError").default;
 var infusejs = require("infuse.js");
 var ajv = require("ajv");
 var utils = require("./_utils");
@@ -12,6 +13,7 @@ describe("assertingInputOK", function() {
         container = new infusejs.Injector();
         container.mapValue("ajv", ajv);
         container.mapValue("Promise", PromiseSync);
+        container.mapValue("JsonValidationError", jsonValidationError);
     });
 
     it("should be a function", function() {
@@ -19,7 +21,7 @@ describe("assertingInputOK", function() {
     });
 
     it("should return a promise", function() {
-        expect(assertingInputOK(ajv, PromiseSync)()).toEqual(jasmine.any(PromiseSync));
+        expect(assertingInputOK(ajv, jsonValidationError, PromiseSync)()).toEqual(jasmine.any(PromiseSync));
     });
 
     it("should reject if the input is invalid", function() {
@@ -44,9 +46,36 @@ describe("assertingInputOK", function() {
             }
         ]
             .forEach(function(input) {
-                var result = assertingInputOK(ajv, PromiseSync)(input);
+                var result = assertingInputOK(ajv, jsonValidationError, PromiseSync)(input);
                 expect(result._catch).toBeDefined();
                 expect(result._then).toBeUndefined();
+            });
+    });
+
+    it("should mention where the invalid object was discovered", function() {
+        [
+            {},
+            false,
+            "",
+            1.4,
+            {
+                schemaUrl: "http://example.com",
+                rel: "self",
+                unexpectedKey: "oh no!"
+            },
+            {
+                schemaUrl: "not a http url",
+                rel: "self"
+            },
+            {
+                schemaUrl: "http://example.com",
+                rel: "self",
+                context: false
+            }
+        ]
+            .forEach(function(input) {
+                var result = assertingInputOK(ajv, jsonValidationError, PromiseSync)(input);
+                expect(result._catch.message).toContain("Input");
             });
     });
 
@@ -65,7 +94,7 @@ describe("assertingInputOK", function() {
             }
         ]
             .forEach(function(input) {
-                var result = assertingInputOK(ajv, PromiseSync)(input);
+                var result = assertingInputOK(ajv, jsonValidationError, PromiseSync)(input);
                 expect(result._then).toBeDefined();
                 expect(result._catch).toBeUndefined();
             });

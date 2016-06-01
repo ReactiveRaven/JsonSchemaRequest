@@ -1,24 +1,12 @@
 const inputSchema = require("../schema/inputSchema.json");
 
-const assertingInputOK = (ajv, Promise) => {
+const assertingInputOK = (ajv, JsonValidationError, Promise) => {
     const okRequest = ajv({}).compile(inputSchema);
-
-    class JsonValidationError extends Error {
-        constructor(errors) {
-            if (!Array.isArray(errors)) {
-                errors = [ errors ];
-            }
-            const message = errors.map(err => `${ err.dataPath } ${ err.message }`).join("; ");
-            super(message);
-            this.errors = errors;
-            this.status = 500;
-        }
-    }
 
     return requestDef => {
         return new Promise((resolve, reject) => (
             !okRequest(requestDef) ?
-                reject(new JsonValidationError(okRequest.errors)) :
+                reject(new JsonValidationError(okRequest.errors, "Input")) :
                 resolve(true)
         ));
     };

@@ -1,4 +1,4 @@
-const assertingResponseOK = ajv => {
+const assertingResponseOK = (ajv, JsonValidationError) => {
     var ajvRemoveAdditional = ajv({ removeAdditional: true });
 
     return link => {
@@ -10,11 +10,7 @@ const assertingResponseOK = ajv => {
 
         return data => {
             if (!responseOk(data)) {
-                throw new Error(
-                    responseOk.errors
-                        .map(err => `${ err.dataPath } ${ err.message }`)
-                        .join("; ")
-                );
+                throw new JsonValidationError(responseOk.errors, "Response");
             }
 
             return data;
