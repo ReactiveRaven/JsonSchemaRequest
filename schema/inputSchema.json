@@ -18,6 +18,10 @@
             "type": [ "object", "string" ],
             "description": "to be sent to the server in the request"
         },
+        "headers": {
+            "type": "object",
+            "description": "Headers passed through to the request"
+        },
         "serverRoot": {
             "type": "string",
             "pattern": "^http",

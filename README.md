@@ -74,6 +74,8 @@ The schema for the json object passed to jsonSchemaRequest is available in `sche
 |----|----|----|
 | schemaUrl | Yes | URL to load the schema from. References inside this schema that point to other files are also loaded, and inlined. |
 | rel | Yes | Relationship name for link to request. This is defined in your schema. |
-| context | | Context data to insert into urls (eg 'id' in example above) |
-| data | | Data to send along with the request (eg the body for 'create' rels) |
-| serverRoot | | The URL to prefix on schema IDs if missing. If you prefer to use relative URLs for your `schemaUrl` this sets the server and path those relative URLs are attached to. |
+| context | | Context data to insert into urls (eg 'id' in example above). |
+| data | | Data to send along with the request (eg the body for 'create' rels). |
+| headers | | Header object to pass through to the request. (eg `{ "Content-Type": "application/json" }`) |
+| schemaPrefix | | The URL to prefix on schema IDs if missing. If you prefer to use relative URLs for your `schemaUrl`, or `id` or `$ref` in your schemas, this sets the server and path those relative URLs are attached to. |
+| serverRoot | | The URL to prefix on `href`s if missing. If you prefer to use relative URLs for your `href` this sets the server and path those relative URLs are attached to. |

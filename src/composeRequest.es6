@@ -9,11 +9,12 @@ const composeRequest = (
     const ajvRemoveAdditional = ajv({ removeAdditional: true });
 
     return requestDef => link => {
+        const context = requestDef.context || {};
         const uriTemplate = uriTemplates(escapeUrl(link.href));
         const missingKeys = uriTemplate.varNames
             .filter(varName => varName !== "%73elf")
             .map(varName => varName === "%65mpty" ? "" : varName)
-            .filter(varName => !(requestDef.context || {}).hasOwnProperty(varName));
+            .filter(varName => !context.hasOwnProperty(varName));
 
         if (missingKeys.length) {
             throw new Error("Missing keys for request: " + missingKeys.join(", "));
@@ -42,10 +43,10 @@ const composeRequest = (
 
         const url = resolveUrl(
             uriTemplate
-                .fill({
-                    "%73elf": requestDef.context || {},
-                    ...(requestDef.context || {})
-                }),
+                .fill(Object.assign(
+                    { "%73elf": context },
+                    context
+                )),
             requestDef
         );
 

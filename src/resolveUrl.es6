@@ -4,7 +4,7 @@ const resolveUrl = (url, requestDef) => {
             (requestDef.serverRoot || "") + url :
             url
     );
-}
+};
 
 export const injection = container => container.mapValue("resolveUrl", resolveUrl);
 
