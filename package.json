@@ -35,7 +35,7 @@
     "deep-pluck": "^0.1.2",
     "deref": "^0.6.4",
     "es6-promise": "^3.1.2",
-    "form-data": "^1.0.0-rc4",
+    "form-data": "^2.0.0",
     "infuse.js": "github:alliterativeanimals/infuse.js#master",
     "isomorphic-fetch": "^2.2.1",
     "json-schema-load-tree": "^0.2.0",
