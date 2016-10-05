@@ -50,7 +50,7 @@
     "jasmine": "^2.4.1",
     "jasmine-node": "^1.14.5",
     "semantic-release": "^4.3.5",
-    "watch": "^0.19.1"
+    "watch": "^1.0.0"
   },
   "config": {
     "commitizen": {
