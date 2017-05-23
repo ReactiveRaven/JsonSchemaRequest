@@ -1,5 +1,7 @@
 # JsonSchemaRequest
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ReactiveRaven/JsonSchemaRequest.svg)](https://greenkeeper.io/)
+
 Allows making requests based on [json hyper schema](http://json-schema.org/) endpoints. Currently a work in progress.
 
 [![Stability:Experimental](https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square&maxAge=2592000)](https://nodejs.org/api/documentation.html#documentation_stability_index)
