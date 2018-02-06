@@ -47,7 +47,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "babel-watch": "^2.0.2",
     "cz-conventional-changelog": "^2.0.0",
-    "jasmine": "^2.4.1",
+    "jasmine": "^3.0.0",
     "jasmine-node": "^1.14.5",
     "semantic-release": "^6.3.6",
     "watch": "^1.0.2"
