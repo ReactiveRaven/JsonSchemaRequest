@@ -48,7 +48,7 @@
     "babel-watch": "^2.0.2",
     "cz-conventional-changelog": "^2.0.0",
     "jasmine": "^3.0.0",
-    "jasmine-node": "^1.14.5",
+    "jasmine-node": "^3.0.0",
     "semantic-release": "^15.10.8",
     "watch": "^1.0.2"
   },
