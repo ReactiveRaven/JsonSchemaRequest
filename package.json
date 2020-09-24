@@ -37,7 +37,7 @@
     "es6-promise": "^4.0.0",
     "form-data": "^3.0.0",
     "infuse.js": "github:alliterativeanimals/infuse.js#master",
-    "isomorphic-fetch": "^2.2.1",
+    "isomorphic-fetch": "^3.0.0",
     "json-schema-load-tree": "^0.2.0",
     "uri-templates": "^0.2.0"
   },
