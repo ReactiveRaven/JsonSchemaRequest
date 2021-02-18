@@ -31,7 +31,7 @@
   "homepage": "https://github.com/ReactiveRaven/JsonSchemaRequest#readme",
   "dependencies": {
     "array.from": "^1.0.1",
-    "ajv": "^6.0.0",
+    "ajv": "^7.1.1",
     "deep-pluck": "^0.1.2",
     "deref": "^0.7.0",
     "es6-promise": "^4.0.0",
